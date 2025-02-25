@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Support Note Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            margin: 0 auto;
+            gap: 15px;
+            max-height: 100vh;
+        }
+        .left-panel {
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(100vh - 20px);
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 20px);
+        }
+        .section {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        label {
+            display: block;
+            margin: 3px 0;
+        }
+        input, select, textarea {
+            margin: 3px 0;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .checkbox-container {
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        .checkbox-container label {
+            display: inline;
+        }
+        textarea {
+            resize: vertical;
+        }
+        #inputText {
+            height: 100px;
+        }
+        .output-textarea {
+            flex-grow: 1;
+            min-height: 200px;
+        }
+        button {
+            padding: 8px;
+            margin: 5px 0;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .left-panel, .right-panel {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <!-- Ticket Extraction Section -->
+            <div class="section">
+                <div class="section-title">Ticket Information Extraction</div>
+                <label for="inputText">Paste Ticket Info:</label>
+                <textarea id="inputText" placeholder="Paste ticket details here..."></textarea>
+                <button id="extractBtn">Extract Info</button>
+            </div>
+            
+            <!-- Call Type Section -->
+            <div class="section">
+                <div class="section-title">Call Type</div>
+                <select id="callType">
+                    <option value="No Internet">No Internet</option>
+                    <option value="Slow Connection">Slow Connection</option>
+                    <option value="Modem Offline">Modem Offline</option>
+                    <option value="Intermittent Connection">Intermittent Connection</option>
+                    <option value="Repair and Install Date Confirmed">Repair and Install Date Confirmed</option>
+                    <option value="Repair and Install Follow-Up">Repair and Install Follow-Up</option>
+                    <option value="Modem Swap and Change of Service (COS)">Modem Swap and Change of Service (COS)</option>
+                    <option value="Courtesy Check">Courtesy Check</option>
+                </select>
+
+                <div id="installDateContainer" class="hidden">
+                    <label for="installDate">Installation Date:</label>
+                    <input type="text" id="installDate">
+                </div>
+
+                <!-- Modem Light Status - Shows only for relevant call types -->
+                <div id="modemStatusSection" class="hidden">
+                    <div class="section-title">Modem Light Status</div>
+                    <div id="modemLightsContainer">
+                        <!-- Will be filled by JavaScript -->
+                    </div>
+                    
+                    <label for="speedTest">Speed Test Results:</label>
+                    <input type="text" id="speedTest">
+                </div>
+
+                <label for="additionalNotes">Additional Notes:</label>
+                <input type="text" id="additionalNotes">
+            </div>
+
+            <!-- Tracking Information -->
+            <div class="section">
+                <div class="section-title">Tracking Information</div>
+                <label for="customerName">Customer Name:</label>
+                <input type="text" id="customerName">
+                
+                <label for="customerNum">Customer #:</label>
+                <input type="text" id="customerNum">
+                
+                <label for="ticketNum">Ticket #:</label>
+                <input type="text" id="ticketNum">
+                
+                <label for="transactionId">Transaction ID:</label>
+                <input type="text" id="transactionId">
+                
+                <label for="lsAccount">LS Account #:</label>
+                <input type="text" id="lsAccount">
+                
+                <label for="rogersId">Rogers ID:</label>
+                <input type="text" id="rogersId">
+            </div>
+
+            <!-- Actions Section -->
+            <div class="section">
+                <div class="section-title">Actions</div>
+                <div id="actionsContainer">
+                    <!-- Will be filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <button id="generateBtn">Generate Note</button>
+            <textarea id="outputText" class="output-textarea" readonly></textarea>
+            <button id="copyBtn">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const MODEM_LIGHTS = {
+            "Power": ["Solid Green", "Flashing Green", "Off"],
+            "DS": ["Solid Green", "Flashing Green", "Solid Blue", "Off"],
+            "US": ["Solid Green", "Flashing Green", "Solid Blue", "Off"],
+            "Online": ["Solid Green", "Flashing Green", "Off"],
+            "Internet": ["Solid Green", "Flashing Green", "Off"]
+        };
+
+        const TROUBLESHOOTING_ACTIONS = [
+            "Customer is online!",
+            "1 Power Cycle Performed",
+            "5 Power Cycle Performed",
+            "Reset Router",
+            "Checked Coax Connection",
+            "Bypassed Router",
+            "Ran Speed Test",
+            "Verified Account Status",
+            "Checked for Outages",
+        ];
+
+        // Define which call types should show modem status
+        const MODEM_STATUS_CALL_TYPES = ["No Internet", "Slow Connection", "Modem Offline", "Intermittent Connection"];
+
+        const CALL_TYPE_ACTIONS = {
+            "No Internet": [
+                "Performed power cycle",
+                "Checked all connections",
+                "Verified account status",
+                "Tested with hardwired connection", 
+                "Bypassed router",
+                "Checked for outages"
+            ],
+            "Slow Connection": [
+                "Ran speed test",
+                "Verified plan speeds",
+                "Tested on multiple devices",
+                "Checked for network congestion",
+                "Tested with hardwired connection", 
+                "Discussed possible upgrades"
+            ],
+            "Modem Offline": [
+                "Performed power cycle",
+                "Checked all connections",
+                "Verified account status",
+                "Escalated to Tier 2",
+                "Scheduled technician visit"
+            ],
+            "Intermittent Connection": [
+                "Verified issue pattern",
+                "Checked for interference",
+                "Tested with hardwired connection",
+                "Updated firmware",
+                "Performed signal test"
+            ],
+            "Repair and Install Date Confirmed": [
+                "Customer confirmed availability",
+                "Customer requested reschedule",
+                "Left voicemail with installation details",
+                "Confirmed installation address",
+                "Verified account details",
+                "Sent confirmation email"
+            ],
+            "Repair and Install Follow-Up": [
+                "Confirmed internet is working",
+                "Speed test performed - within expectations",
+                "All services functioning properly",
+                "Customer satisfied with technician's work",
+                "Explained bill changes if applicable",
+                "Verified WiFi connectivity",
+                "Provided troubleshooting tips"
+            ],
+            "Modem Swap and Change of Service (COS)": [
+                "Confirmed new modem is online",
+                "Verified new MAC address is provisioned",
+                "Old modem removed from account",
+                "Speed test matches new plan speeds",
+                "WiFi settings transferred successfully",
+                "Customer able to connect all devices",
+                "Explained new features/capabilities",
+                "Confirmed billing reflects changes"
+            ],
+            "Courtesy Check": [
+                "Customer satisfied with service",
+                "Customer reported no issues",
+                "Customer requested plan review",
+                "Customer interested in upgrades",
+                "Discussed current promotions",
+                "Reviewed account status"
+            ]
+        };
+
+        const CALL_TYPES = {
+    "No Internet": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== TROUBLESHOOTING DETAILS ===
+CCI no internet.
+
+Modem Light Status:
+{modem_status}
+
+Customer Actions Taken:
+{customer_actions}
+
+Additional Notes:
+- Suggested power cycle and hardwired connection test
+- {speed_test}
+- {additional_notes}`,
+
+    "Slow Connection": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== TROUBLESHOOTING DETAILS ===
+CCI experiencing slow speed.
+
+Speed Test Results:
+{speed_test}
+
+Modem Light Status:
+{modem_status}
+
+Customer Actions Taken:
+{customer_actions}
+
+Additional Notes:
+- Recommended checking for interference
+- Discussed upgrading plan if necessary
+- {additional_notes}`,
+
+    "Modem Offline": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== TROUBLESHOOTING DETAILS ===
+CCI modem offline.
+
+Modem Light Status:
+{modem_status}
+
+Troubleshooting Steps:
+{customer_actions}
+
+Additional Notes:
+- Escalated to Tier 2 support
+- {speed_test}
+- {additional_notes}`,
+
+    "Intermittent Connection": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== TROUBLESHOOTING DETAILS ===
+CCI experiencing intermittent connection.
+
+Modem Light Status:
+{modem_status}
+
+Speed Test Results: 
+{speed_test}
+
+Troubleshooting Steps:
+{customer_actions}
+
+Additional Notes:
+- {additional_notes}`,
+
+    "Repair and Install Date Confirmed": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== CALL DETAILS ===
+CC customer regarding installation/repair appointment.
+Installation Date: {install_date}
+
+Customer Actions:
+{customer_actions}
+
+Additional Notes:
+{additional_notes}`,
+
+    "Repair and Install Follow-Up": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== CALL DETAILS ===
+CC for post installation/repair service verification.
+
+Service Check Results:
+{customer_actions}
+
+Additional Notes:
+{additional_notes}`,
+
+    "Modem Swap and Change of Service (COS)": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== CALL DETAILS ===
+CC to verify modem swap/service change completion.
+
+Verification Steps:
+{customer_actions}
+
+Additional Notes:
+{additional_notes}`,
+
+    "Courtesy Check": `=== TRACKING INFORMATION ===
+Customer Name: {cust_name}
+Customer #: {cust_num}
+Ticket #: {ticket_num}
+Transaction ID: {trans_id}
+LS Account #: {ls_account}
+Rogers ID: {rogers_id}
+
+=== CALL DETAILS ===
+CC as courtesy check on service satisfaction.
+
+Customer Feedback:
+{customer_actions}
+
+Additional Notes:
+{additional_notes}`
+};
+
+
+        // DOM elements
+        const callTypeSelect = document.getElementById('callType');
+        const installDateContainer = document.getElementById('installDateContainer');
+        const modemStatusSection = document.getElementById('modemStatusSection');
+        const modemLightsContainer = document.getElementById('modemLightsContainer');
+        const actionsContainer = document.getElementById('actionsContainer');
+        const generateBtn = document.getElementById('generateBtn');
+        const outputText = document.getElementById('outputText');
+        const copyBtn = document.getElementById('copyBtn');
+        const extractBtn = document.getElementById('extractBtn');
+
+        // Initialize UI
+        function initializeUI() {
+            // Set up modem lights dropdowns
+            for (const [light, states] of Object.entries(MODEM_LIGHTS)) {
+                const container = document.createElement('div');
+                
+                const label = document.createElement('label');
+                label.textContent = `${light}:`;
+                
+                const select = document.createElement('select');
+                select.id = `modem-${light}`;
+                
+                states.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state;
+                    option.textContent = state;
+                    select.appendChild(option);
+                });
+                
+                container.appendChild(label);
+                container.appendChild(select);
+                modemLightsContainer.appendChild(container);
+            }
+
+            // Set initial action checkboxes based on default call type
+            updateActionsByCallType(callTypeSelect.value);
+            
+            // Update UI based on initial call type
+            updateUIByCallType(callTypeSelect.value);
+        }
+
+        // Update actions based on call type
+        function updateActionsByCallType(callType) {
+            // Get the appropriate actions for the call type
+            const actions = CALL_TYPE_ACTIONS[callType] || TROUBLESHOOTING_ACTIONS;
+            
+            // Set up checkboxes for those actions
+            setupActionCheckboxes(actions);
+        }
+        
+        // Update UI elements based on call type
+        function updateUIByCallType(callType) {
+            // Show/hide installation date field
+            if (callType === "Repair and Install Date Confirmed") {
+                installDateContainer.classList.remove('hidden');
+            } else {
+                installDateContainer.classList.add('hidden');
+            }
+            
+            // Show/hide modem status section for relevant call types
+            if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
+                modemStatusSection.classList.remove('hidden');
+            } else {
+                modemStatusSection.classList.add('hidden');
+            }
+        }
+
+        // Set up action checkboxes
+        function setupActionCheckboxes(actions) {
+            actionsContainer.innerHTML = '';
+            
+            actions.forEach(action => {
+                const container = document.createElement('div');
+                container.className = 'checkbox-container';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `action-${action.replace(/\s+/g, '-').toLowerCase()}`;
+                checkbox.value = action;
+                
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = action;
+                
+                container.appendChild(checkbox);
+                container.appendChild(label);
+                actionsContainer.appendChild(container);
+            });
+        }
+
+        // Extract information from ticket text
+        function extractInfo() {
+            let inputText = document.getElementById("inputText").value;
+            
+            // Extract customer name with improved regex for the format "END-USER NAME: Name"
+            let nameMatch = inputText.match(/END-USER NAME:\s*([^-]+?)(?:\s*-|$)/i);
+            // Alternative regex patterns for different name formats
+            if (!nameMatch) {
+                nameMatch = inputText.match(/Customer Name:\s*([^,\n]+)/i);
+            }
+            
+            // Extract account ID
+            let accountMatch = inputText.match(/account ID\s*:\s*(\S+)/i);
+            
+            // Extract ticket number - specifically looking for "Ticket #XXXX" format
+            let ticketMatch = inputText.match(/Ticket\s+#\s*(\d+)/i);
+            
+            // Extract transaction ID with a more specific pattern
+            // Looking for "TrxID:", "TID ", or similar patterns followed by digits
+            let trxMatch = inputText.match(/(?:TrxID|TID|Transaction ID)\s*:?\s*(\d{9})/i);
+            
+            // Extract Rogers ID - 11 digits followed by "- Status" or similar
+            let rogersMatch = inputText.match(/(\d{11})\s*-\s*Status/i);
+            
+            // Look for customer number - standalone 5-digit number
+            // Avoid confusing with transaction ID or other numbers
+            let customerNumMatch = inputText.match(/(?:^|\s|:)(\d{5})(?:\s|$)/);
+            
+            // Update form fields with extracted data
+            document.getElementById("customerName").value = nameMatch ? nameMatch[1].trim() : "";
+            document.getElementById("lsAccount").value = accountMatch ? accountMatch[1] : "";
+            document.getElementById("ticketNum").value = ticketMatch ? ticketMatch[1] : "";
+            document.getElementById("transactionId").value = trxMatch ? trxMatch[1] : "";
+            document.getElementById("rogersId").value = rogersMatch ? rogersMatch[1] : "";
+            document.getElementById("customerNum").value = customerNumMatch ? customerNumMatch[1] : "";
+        }
+
+        // Handle call type change
+        callTypeSelect.addEventListener('change', function() {
+            const callType = this.value;
+            
+            // Update UI based on call type
+            updateUIByCallType(callType);
+            
+            // Update actions based on call type
+            updateActionsByCallType(callType);
+        });
+
+        // Generate note
+        generateBtn.addEventListener('click', function() {
+            const callType = callTypeSelect.value;
+            
+            // Get selected actions
+            const customerActions = Array.from(actionsContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value)
+                .join('\n');
+            
+            // Get modem status for relevant call types
+            let modemStatus = "";
+            if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
+                modemStatus = Object.keys(MODEM_LIGHTS)
+                    .map(light => `${light}: ${document.getElementById(`modem-${light}`).value}`)
+                    .join('\n');
+            }
+            
+            // Format template
+            let note = CALL_TYPES[callType]
+                .replace('{cust_name}', document.getElementById('customerName').value)
+                .replace('{cust_num}', document.getElementById('customerNum').value)
+                .replace('{ticket_num}', document.getElementById('ticketNum').value)
+                .replace('{trans_id}', document.getElementById('transactionId').value)
+                .replace('{ls_account}', document.getElementById('lsAccount').value)
+                .replace('{rogers_id}', document.getElementById('rogersId').value)
+                .replace('{install_date}', document.getElementById('installDate').value || '')
+                .replace('{customer_actions}', customerActions)
+                .replace('{additional_notes}', document.getElementById('additionalNotes').value)
+                .replace('{modem_status}', modemStatus)
+                .replace('{speed_test}', document.getElementById('speedTest').value || 'N/A');
+            
+            // Display the generated note
+            outputText.value = note;
+        });
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', function() {
+            if (outputText.value) {
+                outputText.select();
+                document.execCommand('copy');
+                alert('Note copied to clipboard!');
+            } else {
+                alert('No text to copy!');
+            }
+        });
+        
+        // Add extract button event listener
+        extractBtn.addEventListener('click', extractInfo);
+
+        // Initialize the UI when the page loads
+        document.addEventListener('DOMContentLoaded', initializeUI);
+    </script>
+</body>
+</html>
