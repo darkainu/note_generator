@@ -86,6 +86,12 @@
         .hidden {
             display: none;
         }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+            font-style: italic;
+        }
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
@@ -104,14 +110,15 @@
             <div class="section">
                 <div class="section-title">Ticket Information Extraction</div>
                 <label for="inputText">Paste Ticket Info:</label>
-                <textarea id="inputText" placeholder="Paste ticket details here..."></textarea>
+                <textarea id="inputText" placeholder="Please copy OS Ticket subject including Ticket # and paste here" title="Copy the entire ticket subject line to extract information automatically"></textarea>
+                <div class="help-text">Paste the complete OS Ticket subject to automatically extract customer information</div>
                 <button id="extractBtn">Extract Info</button>
             </div>
-            
+
             <!-- Call Type Section -->
             <div class="section">
                 <div class="section-title">Call Type</div>
-                <select id="callType">
+                <select id="callType" title="Select the primary reason for the customer contact">
                     <option value="No Internet">No Internet</option>
                     <option value="Slow Connection">Slow Connection</option>
                     <option value="Modem Offline">Modem Offline</option>
@@ -124,22 +131,25 @@
 
                 <div id="installDateContainer" class="hidden">
                     <label for="installDate">Installation Date:</label>
-                    <input type="text" id="installDate">
+                    <input type="text" id="installDate" placeholder="MM/DD/YYYY" title="Format: MM/DD/YYYY">
+                    <div class="help-text">Enter the scheduled installation date in MM/DD/YYYY format</div>
                 </div>
 
                 <!-- Modem Light Status - Shows only for relevant call types -->
                 <div id="modemStatusSection" class="hidden">
                     <div class="section-title">Modem Light Status</div>
+                    <div class="help-text">Select the current status for each light on the customer's modem</div>
                     <div id="modemLightsContainer">
                         <!-- Will be filled by JavaScript -->
                     </div>
-                    
+
                     <label for="speedTest">Speed Test Results:</label>
-                    <input type="text" id="speedTest">
+                    <input type="text" id="speedTest" placeholder="e.g. 85Mbps down / 15Mbps up" title="Enter download and upload speeds from speed test">
+                    <div class="help-text">Enter speeds in format: XXMbps down / XXMbps up</div>
                 </div>
 
                 <label for="additionalNotes">Additional Notes:</label>
-                <input type="text" id="additionalNotes">
+                <input type="text" id="additionalNotes" placeholder="Enter any other relevant information about the call">
             </div>
 
             <!-- Tracking Information -->
@@ -147,26 +157,30 @@
                 <div class="section-title">Tracking Information</div>
                 <label for="customerName">Customer Name:</label>
                 <input type="text" id="customerName">
-                
+
                 <label for="customerNum">Customer #:</label>
-                <input type="text" id="customerNum">
-                
+                <input type="text" id="customerNum" placeholder="5-digit customer ID" title="5-digit customer identification number">
+
                 <label for="ticketNum">Ticket #:</label>
-                <input type="text" id="ticketNum">
-                
+                <input type="text" id="ticketNum" title="OS Ticket reference number">
+
                 <label for="transactionId">Transaction ID:</label>
-                <input type="text" id="transactionId">
-                
+                <input type="text" id="transactionId" placeholder="9-digit transaction ID" title="9-digit transaction identifier">
+                <div class="help-text">The 9-digit ID assigned to this specific customer interaction</div>
+
                 <label for="lsAccount">LS Account #:</label>
-                <input type="text" id="lsAccount">
-                
+                <input type="text" id="lsAccount" title="Customer's account identifier">
+                <div class="help-text">The customer's account number in the billing system</div>
+
                 <label for="rogersId">Rogers ID:</label>
-                <input type="text" id="rogersId">
+                <input type="text" id="rogersId" placeholder="11-digit Rogers ID" title="11-digit Rogers identifier">
+                <div class="help-text">11-digit Rogers identifier used for account verification</div>
             </div>
 
             <!-- Actions Section -->
             <div class="section">
                 <div class="section-title">Actions</div>
+                <div class="help-text">Check all troubleshooting steps and actions taken during this call</div>
                 <div id="actionsContainer">
                     <!-- Will be filled by JavaScript -->
                 </div>
@@ -174,9 +188,9 @@
         </div>
 
         <div class="right-panel">
-            <button id="generateBtn">Generate Note</button>
-            <textarea id="outputText" class="output-textarea" readonly></textarea>
-            <button id="copyBtn">Copy to Clipboard</button>
+            <button id="generateBtn" title="Create formatted note from entered information">Generate Note</button>
+            <textarea id="outputText" class="output-textarea" readonly placeholder="Generated note will appear here"></textarea>
+            <button id="copyBtn" title="Copy the generated note to clipboard">Copy to Clipboard</button>
         </div>
     </div>
 
@@ -210,7 +224,7 @@
                 "Performed power cycle",
                 "Checked all connections",
                 "Verified account status",
-                "Tested with hardwired connection", 
+                "Tested with hardwired connection",
                 "Bypassed router",
                 "Checked for outages"
             ],
@@ -219,7 +233,7 @@
                 "Verified plan speeds",
                 "Tested on multiple devices",
                 "Checked for network congestion",
-                "Tested with hardwired connection", 
+                "Tested with hardwired connection",
                 "Discussed possible upgrades"
             ],
             "Modem Offline": [
@@ -357,7 +371,7 @@ CCI experiencing intermittent connection.
 Modem Light Status:
 {modem_status}
 
-Speed Test Results: 
+Speed Test Results:
 {speed_test}
 
 Troubleshooting Steps:
@@ -394,7 +408,6 @@ Rogers ID: {rogers_id}
 
 === CALL DETAILS ===
 CC for post installation/repair service verification.
-
 Service Check Results:
 {customer_actions}
 
@@ -453,20 +466,21 @@ Additional Notes:
             // Set up modem lights dropdowns
             for (const [light, states] of Object.entries(MODEM_LIGHTS)) {
                 const container = document.createElement('div');
-                
+
                 const label = document.createElement('label');
                 label.textContent = `${light}:`;
-                
+
                 const select = document.createElement('select');
                 select.id = `modem-${light}`;
-                
+                select.title = `Current status of the ${light} light on modem`;
+
                 states.forEach(state => {
                     const option = document.createElement('option');
                     option.value = state;
                     option.textContent = state;
                     select.appendChild(option);
                 });
-                
+
                 container.appendChild(label);
                 container.appendChild(select);
                 modemLightsContainer.appendChild(container);
@@ -474,7 +488,7 @@ Additional Notes:
 
             // Set initial action checkboxes based on default call type
             updateActionsByCallType(callTypeSelect.value);
-            
+
             // Update UI based on initial call type
             updateUIByCallType(callTypeSelect.value);
         }
@@ -483,11 +497,11 @@ Additional Notes:
         function updateActionsByCallType(callType) {
             // Get the appropriate actions for the call type
             const actions = CALL_TYPE_ACTIONS[callType] || TROUBLESHOOTING_ACTIONS;
-            
+
             // Set up checkboxes for those actions
             setupActionCheckboxes(actions);
         }
-        
+
         // Update UI elements based on call type
         function updateUIByCallType(callType) {
             // Show/hide installation date field
@@ -496,7 +510,7 @@ Additional Notes:
             } else {
                 installDateContainer.classList.add('hidden');
             }
-            
+
             // Show/hide modem status section for relevant call types
             if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
                 modemStatusSection.classList.remove('hidden');
@@ -508,20 +522,21 @@ Additional Notes:
         // Set up action checkboxes
         function setupActionCheckboxes(actions) {
             actionsContainer.innerHTML = '';
-            
+
             actions.forEach(action => {
                 const container = document.createElement('div');
                 container.className = 'checkbox-container';
-                
+
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = `action-${action.replace(/\s+/g, '-').toLowerCase()}`;
                 checkbox.value = action;
-                
+                checkbox.title = `Check if "${action}" was performed`;
+
                 const label = document.createElement('label');
                 label.htmlFor = checkbox.id;
                 label.textContent = action;
-                
+
                 container.appendChild(checkbox);
                 container.appendChild(label);
                 actionsContainer.appendChild(container);
@@ -531,31 +546,31 @@ Additional Notes:
         // Extract information from ticket text
         function extractInfo() {
             let inputText = document.getElementById("inputText").value;
-            
+
             // Extract customer name with improved regex for the format "END-USER NAME: Name"
             let nameMatch = inputText.match(/END-USER NAME:\s*([^-]+?)(?:\s*-|$)/i);
             // Alternative regex patterns for different name formats
             if (!nameMatch) {
                 nameMatch = inputText.match(/Customer Name:\s*([^,\n]+)/i);
             }
-            
+
             // Extract account ID
             let accountMatch = inputText.match(/account ID\s*:\s*(\S+)/i);
-            
+
             // Extract ticket number - specifically looking for "Ticket #XXXX" format
             let ticketMatch = inputText.match(/Ticket\s+#\s*(\d+)/i);
-            
+
             // Extract transaction ID with a more specific pattern
             // Looking for "TrxID:", "TID ", or similar patterns followed by digits
             let trxMatch = inputText.match(/(?:TrxID|TID|Transaction ID)\s*:?\s*(\d{9})/i);
-            
+
             // Extract Rogers ID - 11 digits followed by "- Status" or similar
             let rogersMatch = inputText.match(/(\d{11})\s*-\s*Status/i);
-            
+
             // Look for customer number - standalone 5-digit number
             // Avoid confusing with transaction ID or other numbers
             let customerNumMatch = inputText.match(/(?:^|\s|:)(\d{5})(?:\s|$)/);
-            
+
             // Update form fields with extracted data
             document.getElementById("customerName").value = nameMatch ? nameMatch[1].trim() : "";
             document.getElementById("lsAccount").value = accountMatch ? accountMatch[1] : "";
@@ -568,10 +583,10 @@ Additional Notes:
         // Handle call type change
         callTypeSelect.addEventListener('change', function() {
             const callType = this.value;
-            
+
             // Update UI based on call type
             updateUIByCallType(callType);
-            
+
             // Update actions based on call type
             updateActionsByCallType(callType);
         });
@@ -579,12 +594,12 @@ Additional Notes:
         // Generate note
         generateBtn.addEventListener('click', function() {
             const callType = callTypeSelect.value;
-            
+
             // Get selected actions
             const customerActions = Array.from(actionsContainer.querySelectorAll('input[type="checkbox"]:checked'))
                 .map(checkbox => checkbox.value)
                 .join('\n');
-            
+
             // Get modem status for relevant call types
             let modemStatus = "";
             if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
@@ -592,7 +607,7 @@ Additional Notes:
                     .map(light => `${light}: ${document.getElementById(`modem-${light}`).value}`)
                     .join('\n');
             }
-            
+
             // Format template
             let note = CALL_TYPES[callType]
                 .replace('{cust_name}', document.getElementById('customerName').value)
@@ -606,7 +621,7 @@ Additional Notes:
                 .replace('{additional_notes}', document.getElementById('additionalNotes').value)
                 .replace('{modem_status}', modemStatus)
                 .replace('{speed_test}', document.getElementById('speedTest').value || 'N/A');
-            
+
             // Display the generated note
             outputText.value = note;
         });
@@ -621,7 +636,7 @@ Additional Notes:
                 alert('No text to copy!');
             }
         });
-        
+
         // Add extract button event listener
         extractBtn.addEventListener('click', extractInfo);
 
