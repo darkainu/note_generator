@@ -92,6 +92,256 @@
             margin-top: 2px;
             font-style: italic;
         }
+        /* Modem Light Indicators */
+        .light-status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .light-status-item {
+            flex: 1;
+    min-width: 130px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+        }
+        /* If there are any light status items with status text, update those too */
+.light-status-item label,
+.light-status-item select {
+    color: var(--text-color);
+}
+        .light-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        /* Light Colors */
+        .light-green-solid {
+            background-color: #4CAF50;
+            border: 1px solid #2E7D32;
+        }
+        .light-green-flash {
+            background-color: #4CAF50;
+            border: 1px solid #2E7D32;
+            animation: flash 1s infinite;
+        }
+        .light-blue-solid {
+            background-color: #2196F3;
+            border: 1px solid #0D47A1;
+        }
+        .light-blue-flash {
+            background-color: #2196F3;
+            border: 1px solid #0D47A1;
+            animation: flash 1s infinite;
+        }
+        .light-amber-solid {
+            background-color: #FFC107;
+            border: 1px solid #FF8F00;
+        }
+        .light-amber-flash {
+            background-color: #FFC107;
+            border: 1px solid #FF8F00;
+            animation: flash 1s infinite;
+        }
+        .light-red-solid {
+            background-color: #F44336;
+            border: 1px solid #B71C1C;
+        }
+        .light-red-flash {
+            background-color: #F44336;
+            border: 1px solid #B71C1C;
+            animation: flash 1s infinite;
+        }
+        .light-white-solid {
+            background-color: #FFFFFF;
+            border: 1px solid #9E9E9E;
+        }
+        .light-white-flash {
+            background-color: #FFFFFF;
+            border: 1px solid #9E9E9E;
+            animation: flash 1s infinite;
+        }
+        .light-off {
+            background-color: #9E9E9E;
+            border: 1px solid #616161;
+            opacity: 0.3;
+        }
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        /* Light Pattern Templates */
+        .pattern-templates {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* CSS Variables for theming */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+    --section-bg: #ffffff;
+    --button-bg: #4CAF50;
+    --button-hover: #45a049;
+    --input-bg: #ffffff;
+    --input-border: #e0e0e0;
+    --pattern-bg: #2c3e50;
+    --pattern-text: #ffffff;
+}
+
+/* Dark theme variables */
+.dark-theme {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --border-color: #444444;
+    --section-bg: #1e1e1e;
+    --button-bg: #2e7d32;
+    --button-hover: #388e3c;
+    --input-bg: #2d2d2d;
+    --input-border: #444444;
+    --pattern-bg: #3949ab;
+    --pattern-text: #ffffff;
+}
+
+/* Apply variables to elements */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.section {
+    background-color: var(--section-bg);
+    border-color: var(--border-color);
+}
+
+button {
+    background-color: var(--button-bg);
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+input, select, textarea {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+}
+
+.pattern-button {
+    background-color: var(--pattern-bg);
+    color: var(--pattern-text);
+}
+
+/* Night mode toggle styling */
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    background-color: var(--section-bg);
+    padding: 5px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin-left: 8px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #2196F3;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+        .pattern-button {
+    padding: 5px 8px;
+    background-color: #2c3e50; /* Darker background */
+    color: white; /* White text */
+    border: 1px solid #34495e;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.pattern-button:hover {
+    background-color: #3498db; /* Blue on hover */
+}
+
+        /* Toast notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        #clearBtn {
+            background-color: #f44336;
+        }
+        #clearBtn:hover {
+            background-color: #d32f2f;
+        }
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
@@ -100,10 +350,16 @@
             .left-panel, .right-panel {
                 max-height: none;
             }
+            .light-status-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Toast notification for auto-save -->
+    <div id="toast">Form data auto-saved</div>
+
     <div class="container">
         <div class="left-panel">
             <!-- Ticket Extraction Section -->
@@ -113,7 +369,15 @@
                 <textarea id="inputText" placeholder="Please copy OS Ticket subject including Ticket # and paste here" title="Copy the entire ticket subject line to extract information automatically"></textarea>
                 <div class="help-text">Paste the complete OS Ticket subject to automatically extract customer information</div>
                 <button id="extractBtn">Extract Info</button>
-            </div>
+
+    <!-- Add the dark mode toggle here -->
+<div class="theme-option">
+    <div class="checkbox-container">
+        <input type="checkbox" id="themeToggle" title="Toggle dark mode">
+        <label for="themeToggle">Dark Mode</label>
+    </div>
+</div>
+</div>
 
             <!-- Call Type Section -->
             <div class="section">
@@ -138,14 +402,27 @@
                 <!-- Modem Light Status - Shows only for relevant call types -->
                 <div id="modemStatusSection" class="hidden">
                     <div class="section-title">Modem Light Status</div>
-                    <div class="help-text">Select the current status for each light on the customer's modem</div>
-                    <div id="modemLightsContainer">
-                        <!-- Will be filled by JavaScript -->
+                    <div class="help-text">Select the status for each numbered light on the customer's modem</div>
+
+                    <!-- Light Pattern Templates -->
+                    <div class="pattern-templates">
+                        <div>Common Patterns:</div>
+                        <button class="pattern-button" data-pattern="all-green-solid">All Green Solid (Normal)</button>
+                        <button class="pattern-button" data-pattern="all-blue-solid">Blue DS/US (Bonded)</button>
+                        <button class="pattern-button" data-pattern="offline-pattern">Offline Pattern</button>
+                        <button class="pattern-button" data-pattern="booting-pattern">Booting Up</button>
+                        <button class="pattern-button" data-pattern="amber-warning">Amber Warning</button>
+                        <button class="pattern-button" data-pattern="red-error">Error State</button>
+                    </div>
+
+                    <!-- Light Status Indicators -->
+                    <div class="light-status-container" id="modemLightsContainer">
+                        <!-- Will be filled with light indicators by JavaScript -->
                     </div>
 
                     <label for="speedTest">Speed Test Results:</label>
-                    <input type="text" id="speedTest" placeholder="e.g. 85Mbps down / 15Mbps up" title="Enter download and upload speeds from speed test">
-                    <div class="help-text">Enter speeds in format: XXMbps down / XXMbps up</div>
+                    <input type="text" id="speedTest" placeholder="e.g. DL: 85Mbps, UL: 15Mbps, Latency: 20ms" title="Enter download and upload speeds from speed test">
+                    <div class="help-text">Enter speeds in format: DL: XXMbps, UL: XXMbps</div>
                 </div>
 
                 <label for="additionalNotes">Additional Notes:</label>
@@ -191,17 +468,94 @@
             <button id="generateBtn" title="Create formatted note from entered information">Generate Note</button>
             <textarea id="outputText" class="output-textarea" readonly placeholder="Generated note will appear here"></textarea>
             <button id="copyBtn" title="Copy the generated note to clipboard">Copy to Clipboard</button>
+            <!-- Clear button will be added here by JavaScript -->
         </div>
     </div>
 
     <script>
         // Constants
         const MODEM_LIGHTS = {
-            "Power": ["Solid Green", "Flashing Green", "Off"],
-            "DS": ["Solid Green", "Flashing Green", "Solid Blue", "Off"],
-            "US": ["Solid Green", "Flashing Green", "Solid Blue", "Off"],
-            "Online": ["Solid Green", "Flashing Green", "Off"],
-            "Internet": ["Solid Green", "Flashing Green", "Off"]
+            "1": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off"],
+            "2": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off"],
+            "3": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off"],
+            "4": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off"],
+            "5": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off"],
+            "6": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off", "N/A"],
+            "7": ["grn sld", "grn flsh", "blue sld", "blue flsh", "amber sld", "amber flsh", "red sld", "red flsh", "white sld", "white flsh", "off", "N/A"]
+        };
+
+        // Light state to CSS class mapping
+        const LIGHT_STATE_CLASSES = {
+            "grn sld": "light-green-solid",
+            "grn flsh": "light-green-flash",
+            "blue sld": "light-blue-solid",
+            "blue flsh": "light-blue-flash",
+            "amber sld": "light-amber-solid",
+            "amber flsh": "light-amber-flash",
+            "red sld": "light-red-solid",
+            "red flsh": "light-red-flash",
+            "white sld": "light-white-solid",
+            "white flsh": "light-white-flash",
+            "off": "light-off",
+            "n/a": "light-na",
+        };
+
+        // Common light patterns for quick selection
+        const LIGHT_PATTERNS = {
+            "all-green-solid": {
+                "1": "grn sld",
+                "2": "grn sld",
+                "3": "grn sld",
+                "4": "grn sld",
+                "5": "grn sld",
+                "6": "grn sld",
+                "7": "grn sld"
+            },
+            "all-blue-solid": {
+                "1": "grn sld", // Power is usually green
+                "2": "blue sld",
+                "3": "blue sld",
+                "4": "grn sld", // Online often green
+                "5": "grn sld",  // Internet often green
+                "6": "blue sld",
+                "7": "blue sld"
+            },
+            "offline-pattern": {
+                "1": "grn sld",
+                "2": "grn flsh",
+                "3": "grn flsh",
+                "4": "off",
+                "5": "off",
+                "6": "off",
+                "7": "off"
+            },
+            "booting-pattern": {
+                "1": "grn sld",
+                "2": "grn flsh",
+                "3": "grn flsh",
+                "4": "off",
+                "5": "blue flsh",
+                "6": "off",
+                "7": "off"
+            },
+            "amber-warning": {
+                "1": "grn sld",
+                "2": "amber flsh",
+                "3": "amber flsh",
+                "4": "amber sld",
+                "5": "amber flsh",
+                "6": "off",
+                "7": "off"
+            },
+            "red-error": {
+                "1": "grn sld", // Power still on
+                "2": "red flsh",
+                "3": "red flsh",
+                "4": "off",
+                "5": "red sld",
+                "6": "off",
+                "7": "off"
+            }
         };
 
         const TROUBLESHOOTING_ACTIONS = [
@@ -214,6 +568,9 @@
             "Ran Speed Test",
             "Verified Account Status",
             "Checked for Outages",
+            "Submit Modem offline",
+            "Submit TT for intermittent",
+            "Hardwired connection tested"
         ];
 
         // Define which call types should show modem status
@@ -226,7 +583,8 @@
                 "Verified account status",
                 "Tested with hardwired connection",
                 "Bypassed router",
-                "Checked for outages"
+                "Checked for outages",
+                "Submit Modem offline"
             ],
             "Slow Connection": [
                 "Ran speed test",
@@ -241,14 +599,16 @@
                 "Checked all connections",
                 "Verified account status",
                 "Escalated to Tier 2",
-                "Scheduled technician visit"
+                "Scheduled technician visit",
+                "Submit Modem offline"
             ],
             "Intermittent Connection": [
                 "Verified issue pattern",
                 "Checked for interference",
                 "Tested with hardwired connection",
                 "Updated firmware",
-                "Performed signal test"
+                "Performed signal test",
+                "Submit TT for intermittent"
             ],
             "Repair and Install Date Confirmed": [
                 "Customer confirmed availability",
@@ -288,7 +648,7 @@
         };
 
         const CALL_TYPES = {
-    "No Internet": `=== TRACKING INFORMATION ===
+            "No Internet": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -297,7 +657,7 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === TROUBLESHOOTING DETAILS ===
-CCI no internet.
+cci no internet
 
 Modem Light Status:
 {modem_status}
@@ -306,11 +666,11 @@ Customer Actions Taken:
 {customer_actions}
 
 Additional Notes:
-- Suggested power cycle and hardwired connection test
+- {additional_notes}
 - {speed_test}
-- {additional_notes}`,
+send survey`,
 
-    "Slow Connection": `=== TRACKING INFORMATION ===
+            "Slow Connection": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -319,7 +679,7 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === TROUBLESHOOTING DETAILS ===
-CCI experiencing slow speed.
+cci experiencing slow speed
 
 Speed Test Results:
 {speed_test}
@@ -331,11 +691,10 @@ Customer Actions Taken:
 {customer_actions}
 
 Additional Notes:
-- Recommended checking for interference
-- Discussed upgrading plan if necessary
-- {additional_notes}`,
+- {additional_notes}
+send survey`,
 
-    "Modem Offline": `=== TRACKING INFORMATION ===
+            "Modem Offline": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -344,7 +703,7 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === TROUBLESHOOTING DETAILS ===
-CCI modem offline.
+cci modem offline
 
 Modem Light Status:
 {modem_status}
@@ -353,11 +712,11 @@ Troubleshooting Steps:
 {customer_actions}
 
 Additional Notes:
-- Escalated to Tier 2 support
+- {additional_notes}
 - {speed_test}
-- {additional_notes}`,
+send survey`,
 
-    "Intermittent Connection": `=== TRACKING INFORMATION ===
+            "Intermittent Connection": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -366,7 +725,7 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === TROUBLESHOOTING DETAILS ===
-CCI experiencing intermittent connection.
+cci intermittent connection
 
 Modem Light Status:
 {modem_status}
@@ -378,9 +737,10 @@ Troubleshooting Steps:
 {customer_actions}
 
 Additional Notes:
-- {additional_notes}`,
+- {additional_notes}
+send survey`,
 
-    "Repair and Install Date Confirmed": `=== TRACKING INFORMATION ===
+            "Repair and Install Date Confirmed": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -389,16 +749,17 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === CALL DETAILS ===
-CC customer regarding installation/repair appointment.
+cc regarding installation/repair appointment
 Installation Date: {install_date}
 
 Customer Actions:
 {customer_actions}
 
 Additional Notes:
-{additional_notes}`,
+{additional_notes}
+send survey`,
 
-    "Repair and Install Follow-Up": `=== TRACKING INFORMATION ===
+            "Repair and Install Follow-Up": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -407,14 +768,16 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === CALL DETAILS ===
-CC for post installation/repair service verification.
+cc for post installation/repair service verification
+
 Service Check Results:
 {customer_actions}
 
 Additional Notes:
-{additional_notes}`,
+{additional_notes}
+send survey`,
 
-    "Modem Swap and Change of Service (COS)": `=== TRACKING INFORMATION ===
+            "Modem Swap and Change of Service (COS)": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -423,15 +786,16 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === CALL DETAILS ===
-CC to verify modem swap/service change completion.
+cc to verify modem swap/service change completion
 
 Verification Steps:
 {customer_actions}
 
 Additional Notes:
-{additional_notes}`,
+{additional_notes}
+send survey`,
 
-    "Courtesy Check": `=== TRACKING INFORMATION ===
+            "Courtesy Check": `=== TRACKING INFORMATION ===
 Customer Name: {cust_name}
 Customer #: {cust_num}
 Ticket #: {ticket_num}
@@ -440,15 +804,15 @@ LS Account #: {ls_account}
 Rogers ID: {rogers_id}
 
 === CALL DETAILS ===
-CC as courtesy check on service satisfaction.
+cc as courtesy check on service satisfaction
 
 Customer Feedback:
 {customer_actions}
 
 Additional Notes:
-{additional_notes}`
-};
-
+{additional_notes}
+send survey`
+        };
 
         // DOM elements
         const callTypeSelect = document.getElementById('callType');
@@ -460,37 +824,427 @@ Additional Notes:
         const outputText = document.getElementById('outputText');
         const copyBtn = document.getElementById('copyBtn');
         const extractBtn = document.getElementById('extractBtn');
+        const toast = document.getElementById('toast');
+
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+
+    // Check if user previously set a preference
+    if (storageAvailable()) {
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        themeToggle.checked = darkMode;
+        if (darkMode) {
+            document.body.classList.add('dark-theme');
+        }
+    }
+
+    // Toggle theme when switch is clicked
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('dark-theme');
+            if (storageAvailable()) {
+                localStorage.setItem('darkMode', 'true');
+            }
+        } else {
+            document.body.classList.remove('dark-theme');
+            if (storageAvailable()) {
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+    });
+}
+        // Check if localStorage is available
+        function storageAvailable() {
+            try {
+                const storage = window.localStorage;
+                const x = '__storage_test__';
+                storage.setItem(x, x);
+                storage.removeItem(x);
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Save form data to localStorage
+        function saveToLocalStorage() {
+            if (!storageAvailable()) return false;
+
+            // Save tracking information
+            const trackingData = {
+                customerName: document.getElementById('customerName').value,
+                customerNum: document.getElementById('customerNum').value,
+                ticketNum: document.getElementById('ticketNum').value,
+                transactionId: document.getElementById('transactionId').value,
+                lsAccount: document.getElementById('lsAccount').value,
+                rogersId: document.getElementById('rogersId').value,
+                callType: document.getElementById('callType').value,
+                additionalNotes: document.getElementById('additionalNotes').value,
+                speedTest: document.getElementById('speedTest')?.value || '',
+                installDate: document.getElementById('installDate')?.value || ''
+            };
+
+            localStorage.setItem('trackingData', JSON.stringify(trackingData));
+
+            // Save modem light status
+            const modemLightData = {};
+            Object.keys(MODEM_LIGHTS).forEach(lightNum => {
+                const select = document.getElementById(`modem-${lightNum}`);
+                if (select) {
+                    modemLightData[lightNum] = select.value;
+                }
+            });
+            localStorage.setItem('modemLightData', JSON.stringify(modemLightData));
+
+            // Save selected actions
+            const selectedActions = Array.from(
+                document.querySelectorAll('#actionsContainer input[type="checkbox"]:checked')
+            ).map(checkbox => checkbox.value);
+            localStorage.setItem('selectedActions', JSON.stringify(selectedActions));
+
+            // Save input text
+            localStorage.setItem('inputText', document.getElementById('inputText').value);
+
+            // Save the generated note if it exists
+            if (outputText.value) {
+                localStorage.setItem('generatedNote', outputText.value);
+            }
+
+            // Timestamp of the save
+            localStorage.setItem('lastSave', new Date().toISOString());
+
+            // Show toast notification
+            showToast("Data auto-saved");
+
+            return true;
+        }
+
+        // Load data from localStorage
+        function loadFromLocalStorage() {
+            if (!storageAvailable()) return false;
+
+            // Check if we have saved data
+            const lastSave = localStorage.getItem('lastSave');
+            if (!lastSave) return false;
+
+            // Display a restoration message with timestamp
+            const lastSaveDate = new Date(lastSave);
+            const timeAgo = getTimeAgo(lastSaveDate);
+            const restoreMsg = `Restoring data from ${timeAgo}`;
+            showToast(restoreMsg);
+
+            // Load tracking information
+            const trackingData = JSON.parse(localStorage.getItem('trackingData') || '{}');
+            for (const [key, value] of Object.entries(trackingData)) {
+                const elem = document.getElementById(key);
+                if (elem) elem.value = value;
+            }
+
+            // Set call type and update UI based on it
+            if (trackingData.callType) {
+                document.getElementById('callType').value = trackingData.callType;
+                updateUIByCallType(trackingData.callType);
+                updateActionsByCallType(trackingData.callType);
+            }
+
+            // Load modem light status
+            const modemLightData = JSON.parse(localStorage.getItem('modemLightData') || '{}');
+            for (const [lightNum, value] of Object.entries(modemLightData)) {
+                const select = document.getElementById(`modem-${lightNum}`);
+                if (select) {
+                    select.value = value;
+                    updateLightIndicator(lightNum, value);
+                }
+            }
+
+            // Load selected actions
+            const selectedActions = JSON.parse(localStorage.getItem('selectedActions') || '[]');
+            setTimeout(() => {
+                selectedActions.forEach(action => {
+                    const id = `action-${action.replace(/\s+/g, '-').toLowerCase()}`;
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = true;
+                });
+            }, 100); // Small delay to ensure checkboxes are created
+
+            // Load input text
+            const inputText = localStorage.getItem('inputText');
+            if (inputText) document.getElementById('inputText').value = inputText;
+
+            // Load generated note
+            const generatedNote = localStorage.getItem('generatedNote');
+            if (generatedNote) outputText.value = generatedNote;
+
+            return true;
+        }
+
+        // Helper function to format time ago
+        // Helper function to format time ago
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+
+            let interval = Math.floor(seconds / 86400);
+            if (interval >= 1) {
+                return interval + " day" + (interval > 1 ? "s" : "") + " ago";
+            }
+
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) {
+                return interval + " hour" + (interval > 1 ? "s" : "") + " ago";
+            }
+
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) {
+                return interval + " minute" + (interval > 1 ? "s" : "") + " ago";
+            }
+
+            return "just now";
+        }
+
+        // Display toast notification
+        function showToast(message) {
+            toast.textContent = message;
+            toast.className = "show";
+
+            // After 3 seconds, hide the toast
+            setTimeout(() => {
+                toast.className = toast.className.replace("show", "");
+            }, 3000);
+        }
+
+        // Add a clear button to reset the form
+        function addClearFormButton() {
+    const clearButton = document.createElement('button');
+    clearButton.id = 'clearBtn';
+    clearButton.textContent = 'Clear All Data';
+    clearButton.title = 'Clear all form data and saved information';
+
+    clearButton.addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all form data? This cannot be undone.')) {
+            // Save the current theme state before clearing
+            const isDarkMode = document.body.classList.contains('dark-theme');
+
+            // Clear localStorage (but preserve darkMode setting)
+            if (storageAvailable()) {
+                const darkModeSetting = localStorage.getItem('darkMode');
+
+                // Clear all form-related items
+                localStorage.removeItem('trackingData');
+                localStorage.removeItem('modemLightData');
+                localStorage.removeItem('selectedActions');
+                localStorage.removeItem('inputText');
+                localStorage.removeItem('generatedNote');
+                localStorage.removeItem('lastSave');
+
+                // Restore dark mode setting if it existed
+                if (darkModeSetting) {
+                    localStorage.setItem('darkMode', darkModeSetting);
+                }
+            }
+
+            // Directly reset all form elements
+            // Clear all input fields
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.value = '';
+            });
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (checkbox.id !== 'themeToggle') {
+                    checkbox.checked = false;
+                }
+            });
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.checked = isDarkMode;
+            }
+
+
+            // Clear all textareas
+            document.querySelectorAll('textarea').forEach(textarea => {
+                textarea.value = '';
+            });
+
+            // Uncheck all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            // Reset select elements to first option
+            document.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+
+            // Reset modem light indicators
+            Object.keys(MODEM_LIGHTS).forEach(lightNum => {
+                const select = document.getElementById(`modem-${lightNum}`);
+                if (select) {
+                    select.value = MODEM_LIGHTS[lightNum][0]; // Set to first option
+                    updateLightIndicator(lightNum, MODEM_LIGHTS[lightNum][0]);
+                }
+            });
+
+            // Clear the output
+            document.getElementById('outputText').value = '';
+
+            // Reset UI to initial state
+            updateUIByCallType(document.getElementById('callType').value);
+
+            showToast('All data has been cleared');
+        }
+    });
+
+    // Add to right panel after copy button
+    document.querySelector('.right-panel').appendChild(clearButton);
+}
+
 
         // Initialize UI
         function initializeUI() {
-            // Set up modem lights dropdowns
-            for (const [light, states] of Object.entries(MODEM_LIGHTS)) {
-                const container = document.createElement('div');
+            // Set up modem lights UI with numbered indicators
+            for (const [lightNum, states] of Object.entries(MODEM_LIGHTS)) {
+                const lightContainer = document.createElement('div');
+                lightContainer.className = 'light-status-item';
 
+                // Create container for the light indicator and dropdown
+                const indicatorContainer = document.createElement('div');
+
+                // Create visual light indicator
+                const lightIndicator = document.createElement('span');
+                lightIndicator.className = 'light-indicator light-green-solid';
+                lightIndicator.id = `indicator-${lightNum}`;
+
+                // Create label with light number
                 const label = document.createElement('label');
-                label.textContent = `${light}:`;
+                label.textContent = `Light ${lightNum}:`;
+                label.htmlFor = `modem-${lightNum}`;
 
+                // Create select for light status
                 const select = document.createElement('select');
-                select.id = `modem-${light}`;
-                select.title = `Current status of the ${light} light on modem`;
+                select.id = `modem-${lightNum}`;
+                select.title = `Status of light ${lightNum}`;
+                select.setAttribute('data-light-num', lightNum);
 
+                // Add state options to select
                 states.forEach(state => {
                     const option = document.createElement('option');
                     option.value = state;
-                    option.textContent = state;
+
+                    // Format display text for better readability
+                    let displayText = state;
+
+                    // Replace abbreviations with full words
+                    displayText = displayText.replace('grn', 'Green');
+                    displayText = displayText.replace('sld', 'Solid');
+                    displayText = displayText.replace('flsh', 'Flashing');
+                    displayText = displayText.replace('blue', 'Blue');
+                    displayText = displayText.replace('amber', 'Amber');
+                    displayText = displayText.replace('red', 'Red');
+                    displayText = displayText.replace('white', 'White');
+                    displayText = displayText.replace('off', 'Off');
+
+                    // Capitalize first letter
+                    displayText = displayText.charAt(0).toUpperCase() + displayText.slice(1);
+
+                    option.textContent = displayText;
                     select.appendChild(option);
                 });
 
-                container.appendChild(label);
-                container.appendChild(select);
-                modemLightsContainer.appendChild(container);
+                // Update the visual indicator when select changes
+                select.addEventListener('change', function() {
+                    updateLightIndicator(lightNum, this.value);
+                    if (storageAvailable()) saveToLocalStorage();
+                });
+
+                // Assemble the light status item
+                indicatorContainer.appendChild(lightIndicator);
+                indicatorContainer.appendChild(label);
+                lightContainer.appendChild(indicatorContainer);
+                lightContainer.appendChild(select);
+                modemLightsContainer.appendChild(lightContainer);
+
+                // Set initial indicator
+                updateLightIndicator(lightNum, states[0]);
             }
+
+            // Set up pattern template buttons
+            const patternButtons = document.querySelectorAll('.pattern-button');
+            patternButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pattern = this.getAttribute('data-pattern');
+                    applyLightPattern(pattern);
+                    if (storageAvailable()) saveToLocalStorage();
+                });
+            });
+
+                setupThemeToggle();
+
+
+            // Add clear button
+            addClearFormButton();
 
             // Set initial action checkboxes based on default call type
             updateActionsByCallType(callTypeSelect.value);
 
             // Update UI based on initial call type
             updateUIByCallType(callTypeSelect.value);
+
+            // Load saved data if it exists
+            if (storageAvailable()) loadFromLocalStorage();
+
+            // Add auto-save functionality to input elements
+            if (storageAvailable()) {
+                const formElements = document.querySelectorAll('input, select, textarea');
+                formElements.forEach(elem => {
+                    elem.addEventListener('change', saveToLocalStorage);
+                    // Add input event for text fields to save while typing (with debounce)
+                    if (elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA') {
+                        let debounceTimer;
+                        elem.addEventListener('input', function() {
+                            clearTimeout(debounceTimer);
+                            debounceTimer = setTimeout(saveToLocalStorage, 1000);
+                        });
+                    }
+                });
+
+                // Also save on checkbox changes
+                document.addEventListener('click', function(e) {
+                    if (e.target && e.target.type === 'checkbox') {
+                        saveToLocalStorage();
+                    }
+                });
+            }
+        }
+
+        // Update the visual light indicator based on selected state
+        function updateLightIndicator(lightNum, state) {
+            const indicator = document.getElementById(`indicator-${lightNum}`);
+            if (!indicator) return;
+
+            // Remove all existing state classes
+            Object.values(LIGHT_STATE_CLASSES).forEach(cls => {
+                indicator.classList.remove(cls);
+            });
+
+            // Add the appropriate class for the current state
+            const stateClass = LIGHT_STATE_CLASSES[state.toLowerCase()];
+            if (stateClass) {
+                indicator.classList.add(stateClass);
+            }
+        }
+
+        // Apply a predefined light pattern
+        function applyLightPattern(patternName) {
+            const pattern = LIGHT_PATTERNS[patternName];
+            if (!pattern) return;
+
+            // Apply each light state from the pattern
+            for (const [lightNum, state] of Object.entries(pattern)) {
+                const select = document.getElementById(`modem-${lightNum}`);
+                if (select) {
+                    select.value = state;
+                    updateLightIndicator(lightNum, state);
+                }
+            }
         }
 
         // Update actions based on call type
@@ -578,6 +1332,9 @@ Additional Notes:
             document.getElementById("transactionId").value = trxMatch ? trxMatch[1] : "";
             document.getElementById("rogersId").value = rogersMatch ? rogersMatch[1] : "";
             document.getElementById("customerNum").value = customerNumMatch ? customerNumMatch[1] : "";
+
+            // Save the extracted data
+            if (storageAvailable()) saveToLocalStorage();
         }
 
         // Handle call type change
@@ -589,6 +1346,9 @@ Additional Notes:
 
             // Update actions based on call type
             updateActionsByCallType(callType);
+
+            // Save the changes
+            if (storageAvailable()) saveToLocalStorage();
         });
 
         // Generate note
@@ -604,7 +1364,8 @@ Additional Notes:
             let modemStatus = "";
             if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
                 modemStatus = Object.keys(MODEM_LIGHTS)
-                    .map(light => `${light}: ${document.getElementById(`modem-${light}`).value}`)
+                    .filter(lightNum => document.getElementById(`modem-${lightNum}`))
+                    .map(lightNum => `${lightNum}: ${document.getElementById(`modem-${lightNum}`).value}`)
                     .join('\n');
             }
 
@@ -617,13 +1378,19 @@ Additional Notes:
                 .replace('{ls_account}', document.getElementById('lsAccount').value)
                 .replace('{rogers_id}', document.getElementById('rogersId').value)
                 .replace('{install_date}', document.getElementById('installDate').value || '')
-                .replace('{customer_actions}', customerActions)
-                .replace('{additional_notes}', document.getElementById('additionalNotes').value)
-                .replace('{modem_status}', modemStatus)
-                .replace('{speed_test}', document.getElementById('speedTest').value || 'N/A');
+                .replace('{customer_actions}', customerActions || 'No actions recorded')
+                .replace('{additional_notes}', document.getElementById('additionalNotes').value || 'None')
+                .replace('{modem_status}', modemStatus || 'Not checked')
+                .replace('{speed_test}', document.getElementById('speedTest').value || 'Not performed');
 
             // Display the generated note
             outputText.value = note;
+
+            // Save the generated note
+            if (storageAvailable()) {
+                localStorage.setItem('generatedNote', note);
+                saveToLocalStorage();
+            }
         });
 
         // Copy to clipboard
@@ -631,9 +1398,9 @@ Additional Notes:
             if (outputText.value) {
                 outputText.select();
                 document.execCommand('copy');
-                alert('Note copied to clipboard!');
+                showToast('Note copied to clipboard!');
             } else {
-                alert('No text to copy!');
+                showToast('No text to copy!');
             }
         });
 
