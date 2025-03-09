@@ -118,7 +118,7 @@ const CALL_TYPE_ACTIONS = {
         "Checked Coax rating",
         "Checked for splitters, joiners, couplers",
         "Verified ethernet cable is Cat 5e +",
-        "Checked for powerbars", 
+        "Checked for powerbars",
         "Performed factory reset on modem"
     ],
     "Intermittent Connection": [
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Check if localStorage is available
     function storageAvailable() {
         try {
@@ -575,14 +575,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const lightContainer = document.createElement('div');
             lightContainer.className = 'light-status-item';
 
-            // Create container for the light indicator and dropdown
-            const indicatorContainer = document.createElement('div');
-
-            // Create visual light indicator
-            const lightIndicator = document.createElement('span');
-            lightIndicator.className = 'light-indicator light-green-solid';
-            lightIndicator.id = `indicator-${lightNum}`;
-
             // Create label with light number
             const label = document.createElement('label');
             label.textContent = `Light ${lightNum}:`;
@@ -619,21 +611,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 select.appendChild(option);
             });
 
-            // Update the visual indicator when select changes
-            select.addEventListener('change', function() {
-                updateLightIndicator(lightNum, this.value);
-                if (storageAvailable()) saveToLocalStorage();
-            });
-
             // Assemble the light status item
-            indicatorContainer.appendChild(lightIndicator);
-            indicatorContainer.appendChild(label);
-            lightContainer.appendChild(indicatorContainer);
+            lightContainer.appendChild(label);
             lightContainer.appendChild(select);
             modemLightsContainer.appendChild(lightContainer);
-
-            // Set initial indicator
-            updateLightIndicator(lightNum, states[0]);
         }
 
         // Set up pattern template buttons
@@ -740,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             modemStatusSection.classList.add('hidden');
         }
-        
+
         // Show/hide ticket extraction section - hide for customer-initiated calls
         if (CUSTOMER_INITIATED_CALL_TYPES.includes(callType)) {
             ticketExtractionSection.classList.add('hidden');
@@ -843,9 +824,9 @@ if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
         .replace('{cust_num}', document.getElementById('customerNum').value)
         .replace('{ticket_num}', document.getElementById('ticketNum').value)
         .replace('{trans_id}', document.getElementById('transactionId').value)
+        .replace('{install_date}', document.getElementById('installDate').value || '')
         .replace('{ls_account}', document.getElementById('lsAccount').value)
         .replace('{rogers_id}', document.getElementById('rogersId').value)
-        .replace('{install_date}', document.getElementById('installDate').value || '')
         .replace('{customer_actions}', customerActions || ' ')
         .replace('{additional_notes}', document.getElementById('additionalNotes').value || '')
         .replace('{modem_status}', modemStatus || '')
@@ -876,7 +857,7 @@ if (MODEM_STATUS_CALL_TYPES.includes(callType)) {
     }
 
     // Set up event listeners
-    
+
     // Handle call type change
     callTypeSelect.addEventListener('change', function() {
         const callType = this.value;
